@@ -1,0 +1,42 @@
+{% extends 'index.html'%}
+<!-- 加载自带的评论插件 -->
+{% load comments %}
+
+{% block page-content %}
+    <div class="contents">
+      <B>{{ bbs_obj.title }}</B>
+      <br>
+      <!-- 展示帖子内容 -->
+      {{ bbs_obj.content }}
+
+      <hr>
+      <div class="contents_1">
+        <form action="/sub_comment/" method="POST">
+            <!-- {% csrf_token %}  -->
+            <textarea cols=80 rows=3 name='comment_content'></textarea>
+            <input type="hidden" name="bbs_id" value="{{bbs_obj.id}}" />
+            <input type="submit" value="Add comment" id='id_summit' />
+        </form>
+
+        <!-- 使用django自带的评论系统展示评论  -->
+        {% get_comment_count for bbs_obj as comment_count  %}
+            共{{ comment_count }} 条评论。
+        
+        <br>
+
+        <!-- 顺序显示     {% render_comment_list for bbs_obj %}  -->
+        <!-- 倒序显示 -->
+        {% get_comment_list for bbs_obj as comment_list %}
+          {% for comment in comment_list reversed %}
+                {{ comment.submit_date}}
+                <br>
+                {{ comment.comment}}
+                <br>
+          {% endfor %}
+      </div>
+    </div>
+    <br>
+
+
+{% endblock %}
+
